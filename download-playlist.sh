@@ -79,8 +79,14 @@ fi
 
 # --- Tools directory ---
 if $EPHEMERAL; then
-    TOOLS_DIR="$(mktemp -d /tmp/jellyfin-dl-tools.XXXXXX)"
-    echo "Ephemeral mode: tools in $TOOLS_DIR (cleaned on reboot)"
+    EXISTING_EPHEMERAL="$(find /tmp -maxdepth 1 -type d -name 'jellyfin-dl-tools.*' 2>/dev/null | head -1)"
+    if [[ -n "$EXISTING_EPHEMERAL" && -d "$EXISTING_EPHEMERAL/bin" ]]; then
+        TOOLS_DIR="$EXISTING_EPHEMERAL"
+        echo "Ephemeral mode: reusing existing tools in $TOOLS_DIR"
+    else
+        TOOLS_DIR="$(mktemp -d /tmp/jellyfin-dl-tools.XXXXXX)"
+        echo "Ephemeral mode: tools in $TOOLS_DIR (cleaned on reboot)"
+    fi
 else
     TOOLS_DIR="$HOME/.local/share/jellyfin-dl-tools"
 fi
@@ -226,9 +232,3 @@ echo "Starting yt-dlp..."
 "$YT_DLP_PATH" "${args[@]}"
 
 echo "Finished. Files saved under: $OUTPUT_DIR"
-
-# --- Cleanup ephemeral tools ---
-if $EPHEMERAL; then
-    echo "Cleaning up ephemeral tools: $TOOLS_DIR"
-    rm -rf "$TOOLS_DIR"
-fi
