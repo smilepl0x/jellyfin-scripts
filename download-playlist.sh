@@ -96,7 +96,7 @@ ARCHIVE_FILE="$TOOLS_DIR/$ARCHIVE_FILENAME"
 mkdir -p "$BIN_DIR"
 
 # --- Check for required system tools ---
-for cmd in curl tar; do
+for cmd in curl tar unzip; do
     if ! command -v "$cmd" &>/dev/null; then
         echo "Error: $cmd is required but not found in PATH." >&2
         exit 1
@@ -158,12 +158,17 @@ elif [[ -x "$BIN_DIR/deno" ]]; then
     echo "deno found at: $DENO_PATH"
 else
     echo "Downloading deno..."
-    DENO_INSTALL="$TOOLS_DIR" curl -fsSL https://deno.land/install.sh | sh
-    DENO_PATH="$BIN_DIR/deno"
-    if [[ ! -x "$DENO_PATH" ]]; then
-        echo "Warning: deno install completed but binary not found at $DENO_PATH" >&2
+    DENO_ZIP="$TOOLS_DIR/deno.zip"
+    DENO_URL="$(curl -fsSL --connect-timeout 10 --max-time 30 "https://api.github.com/repos/denoland/deno/releases/latest" | grep -o '"browser_download_url": "[^"]*deno-linux-x64.zip"' | cut -d'"' -f4)"
+    if [[ -z "$DENO_URL" ]]; then
+        echo "Warning: could not determine latest deno release URL." >&2
         echo "deno may not work correctly for YouTube bot challenges." >&2
     else
+        download "$DENO_URL" "$DENO_ZIP"
+        unzip -qo "$DENO_ZIP" -d "$BIN_DIR"
+        chmod +x "$BIN_DIR/deno"
+        rm -f "$DENO_ZIP"
+        DENO_PATH="$BIN_DIR/deno"
         echo "deno installed to: $DENO_PATH"
     fi
 fi
