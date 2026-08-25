@@ -232,3 +232,9 @@ echo "Starting yt-dlp..."
 "$YT_DLP_PATH" "${args[@]}"
 
 echo "Finished. Files saved under: $OUTPUT_DIR"
+
+# --- Cleanup ephemeral tools ---
+if $EPHEMERAL; then
+    echo "Cleaning up ephemeral tools: $TOOLS_DIR"
+    rm -rf "$TOOLS_DIR"
+fi
