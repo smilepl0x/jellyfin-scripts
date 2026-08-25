@@ -232,6 +232,12 @@ fi
 args+=("--output" "$OUTPUT_TEMPLATE")
 args+=("$PLAYLIST_URL")
 
+# --- Ensure cursor is visible on exit ---
+restore_cursor() {
+    printf '\033[?25h'
+}
+trap restore_cursor EXIT
+
 # --- Execute ---
 echo "Starting yt-dlp..."
 "$YT_DLP_PATH" "${args[@]}"
