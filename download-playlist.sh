@@ -245,18 +245,20 @@ else
 fi
 
 # Output template and URL
+args+=("-P" "$OUTPUT_DIR")
 args+=("--output" "$OUTPUT_TEMPLATE")
 args+=("$PLAYLIST_URL")
 
-# --- Ensure cursor is visible on exit ---
+# --- Ensure cursor is visible on interrupt/term ---
 restore_cursor() {
     printf '\033[?25h'
 }
-trap restore_cursor EXIT
+trap restore_cursor INT TERM
 
 # --- Execute ---
 echo "Starting yt-dlp..."
 "$YT_DLP_PATH" "${args[@]}"
+restore_cursor
 
 echo "Finished. Files saved under: $OUTPUT_DIR"
 
