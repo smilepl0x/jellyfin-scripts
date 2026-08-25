@@ -161,7 +161,7 @@ elif [[ -x "$BIN_DIR/deno" ]]; then
 else
     echo "Downloading deno..."
     DENO_ZIP="$TOOLS_DIR/deno.zip"
-    DENO_URL="https://github.com/denoland/deno/releases/latest/download/deno-linux-x64.zip"
+    DENO_URL="https://github.com/denoland/deno/releases/latest/download/deno-x86_64-unknown-linux-gnu.zip"
     echo "  Downloading from: $DENO_URL"
     download "$DENO_URL" "$DENO_ZIP"
     if [[ ! -s "$DENO_ZIP" ]]; then
