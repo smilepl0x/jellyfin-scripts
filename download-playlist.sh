@@ -161,20 +161,30 @@ elif [[ -x "$BIN_DIR/deno" ]]; then
 else
     echo "Downloading deno..."
     DENO_ZIP="$TOOLS_DIR/deno.zip"
-    DENO_URL="https://github.com/denoland/deno/releases/latest/download/deno-x86_64-unknown-linux-gnu.zip"
-    echo "  Downloading from: $DENO_URL"
-    download "$DENO_URL" "$DENO_ZIP"
-    if [[ ! -s "$DENO_ZIP" ]]; then
-        echo "Warning: deno download failed (empty file)." >&2
-        echo "deno may not work correctly for YouTube bot challenges." >&2
-        rm -f "$DENO_ZIP"
-    else
-        echo "  Extracting..."
-        unzip -qo "$DENO_ZIP" -d "$BIN_DIR"
-        chmod +x "$BIN_DIR/deno"
-        rm -f "$DENO_ZIP"
-        DENO_PATH="$BIN_DIR/deno"
-        echo "  deno installed to: $DENO_PATH"
+    DENO_ARCH="$(uname -m)"
+    case "$DENO_ARCH" in
+        x86_64)  DENO_ASSET="deno-x86_64-unknown-linux-gnu.zip" ;;
+        aarch64) DENO_ASSET="deno-aarch64-unknown-linux-gnu.zip" ;;
+        *)       echo "Warning: unsupported architecture: $DENO_ARCH" >&2
+                 echo "deno may not work correctly for YouTube bot challenges." >&2
+                 DENO_ASSET="" ;;
+    esac
+    if [[ -n "$DENO_ASSET" ]]; then
+        DENO_URL="https://github.com/denoland/deno/releases/latest/download/$DENO_ASSET"
+        echo "  Downloading from: $DENO_URL"
+        download "$DENO_URL" "$DENO_ZIP"
+        if [[ ! -s "$DENO_ZIP" ]]; then
+            echo "Warning: deno download failed (empty file)." >&2
+            echo "deno may not work correctly for YouTube bot challenges." >&2
+            rm -f "$DENO_ZIP"
+        else
+            echo "  Extracting..."
+            unzip -qo "$DENO_ZIP" -d "$BIN_DIR"
+            chmod +x "$BIN_DIR/deno"
+            rm -f "$DENO_ZIP"
+            DENO_PATH="$BIN_DIR/deno"
+            echo "  deno installed to: $DENO_PATH"
+        fi
     fi
 fi
 
