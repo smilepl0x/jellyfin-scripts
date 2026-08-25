@@ -121,6 +121,7 @@ elif [[ -x "$BIN_DIR/yt-dlp" ]]; then
     echo "yt-dlp exists — attempting self-update..."
     "$YT_DLP_PATH" -U 2>/dev/null || true
 else
+    echo "  Downloading yt-dlp..."
     download "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp" "$BIN_DIR/yt-dlp"
     chmod +x "$BIN_DIR/yt-dlp"
     YT_DLP_PATH="$BIN_DIR/yt-dlp"
@@ -136,6 +137,7 @@ else
     FFMPEG_BIN="$FFMPEG_DIR/ffmpeg"
     if [[ ! -x "$FFMPEG_BIN" ]]; then
         FFMPEG_TAR="$TOOLS_DIR/ffmpeg-release-amd64-static.tar.xz"
+        echo "  Downloading ffmpeg..."
         download "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz" "$FFMPEG_TAR"
         echo "Extracting ffmpeg..."
         tar -xf "$FFMPEG_TAR" -C "$TOOLS_DIR"
@@ -159,17 +161,20 @@ elif [[ -x "$BIN_DIR/deno" ]]; then
 else
     echo "Downloading deno..."
     DENO_ZIP="$TOOLS_DIR/deno.zip"
-    DENO_URL="$(curl -fsSL --connect-timeout 10 --max-time 30 "https://api.github.com/repos/denoland/deno/releases/latest" | grep -o '"browser_download_url": "[^"]*deno-linux-x64.zip"' | cut -d'"' -f4)"
+    echo "  Fetching latest release info from GitHub..."
+    DENO_URL="$(curl -L --connect-timeout 10 --max-time 30 "https://api.github.com/repos/denoland/deno/releases/latest" 2>/dev/null | grep -o '"browser_download_url": "[^"]*deno-linux-x64.zip"' | cut -d'"' -f4)"
     if [[ -z "$DENO_URL" ]]; then
         echo "Warning: could not determine latest deno release URL." >&2
         echo "deno may not work correctly for YouTube bot challenges." >&2
     else
+        echo "  Downloading from: $DENO_URL"
         download "$DENO_URL" "$DENO_ZIP"
+        echo "  Extracting..."
         unzip -qo "$DENO_ZIP" -d "$BIN_DIR"
         chmod +x "$BIN_DIR/deno"
         rm -f "$DENO_ZIP"
         DENO_PATH="$BIN_DIR/deno"
-        echo "deno installed to: $DENO_PATH"
+        echo "  deno installed to: $DENO_PATH"
     fi
 fi
 
