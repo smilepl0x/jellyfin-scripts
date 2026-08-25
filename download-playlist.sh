@@ -106,7 +106,7 @@ YT_DLP_PATH=""
 if command -v yt-dlp &>/dev/null; then
     YT_DLP_PATH="$(command -v yt-dlp)"
     echo "yt-dlp found at: $YT_DLP_PATH — attempting self-update..."
-    yt_dlp -U 2>/dev/null || true
+    "$YT_DLP_PATH" -U 2>/dev/null || true
 elif [[ -x "$BIN_DIR/yt-dlp" ]]; then
     YT_DLP_PATH="$BIN_DIR/yt-dlp"
     echo "yt-dlp exists — attempting self-update..."
