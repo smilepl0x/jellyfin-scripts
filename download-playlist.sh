@@ -106,8 +106,8 @@ done
 # --- Helper: download file with progress ---
 download() {
     local url="$1" dest="$2"
-    echo "Downloading $(basename "$dest")..."
-    curl -L --progress-bar -o "$dest" "$url"
+    echo "  Downloading $(basename "$dest")..."
+    curl -L --progress-bar --connect-timeout 10 --max-time 300 -o "$dest" "$url"
 }
 
 # --- Ensure yt-dlp ---
@@ -161,15 +161,7 @@ elif [[ -x "$BIN_DIR/deno" ]]; then
 else
     echo "Downloading deno..."
     DENO_ZIP="$TOOLS_DIR/deno.zip"
-    echo "  Fetching latest release info from GitHub..."
-    DENO_URL="$(curl -L --connect-timeout 10 --max-time 30 "https://api.github.com/repos/denoland/deno/releases/latest" 2>/dev/null | grep -o '"browser_download_url": "[^"]*deno-linux-x64.zip"' | cut -d'"' -f4)"
-
-    # Fallback: try direct download of a known version
-    if [[ -z "$DENO_URL" ]]; then
-        echo "  GitHub API unavailable, trying direct download..." >&2
-        DENO_URL="https://github.com/denoland/deno/releases/latest/download/deno-linux-x64.zip"
-    fi
-
+    DENO_URL="https://github.com/denoland/deno/releases/latest/download/deno-linux-x64.zip"
     echo "  Downloading from: $DENO_URL"
     download "$DENO_URL" "$DENO_ZIP"
     if [[ ! -s "$DENO_ZIP" ]]; then
