@@ -21,8 +21,7 @@ done < "$CONFIG_FILE"
 OUTPUT_DIR="${OUTPUT_DIR:-$HOME/Downloads/yt-dlp_playlist}"
 AUDIO_ONLY=false
 AUDIO_FORMAT="${DEFAULT_AUDIO_FORMAT:-mp3}"
-COOKIE_BROWSER="${DEFAULT_BROWSER:-firefox}"
-NO_COOKIES=false
+COOKIE_BROWSER=""
 NO_SPONSORBLOCK=false
 MAX_DOWNLOADS=""
 CRT=false
@@ -40,11 +39,10 @@ Options:
   -o DIR          Output directory (default: ~/Downloads/yt-dlp_playlist)
   -a              Audio-only mode
   -f FORMAT       Audio format (default: mp3)
-  -c BROWSER      Browser for cookie extraction (default: firefox)
+  -c [BROWSER]    Extract cookies from browser (opt-in, defaults to config value)
   -n NUM          Max downloads (for testing)
   --crt           Crop video to 4:3 for CRT displays
   --ephemeral     Store tools in /tmp (cleaned on reboot)
-  --no-cookies    Skip cookie extraction
   --no-sponsorblock  Skip SponsorBlock segment removal
   -h, --help      Show this help message
 EOF
@@ -56,11 +54,16 @@ while [[ $# -gt 0 ]]; do
         -o)     OUTPUT_DIR="$2"; shift 2 ;;
         -a)     AUDIO_ONLY=true; shift ;;
         -f)     AUDIO_FORMAT="$2"; shift 2 ;;
-        -c)     COOKIE_BROWSER="$2"; shift 2 ;;
+        -c)
+            if [[ -z "${2:-}" || "${2:-}" == -* ]]; then
+                COOKIE_BROWSER="${DEFAULT_BROWSER:-firefox}"
+                shift
+            else
+                COOKIE_BROWSER="$2"; shift 2
+            fi ;;
         -n)     MAX_DOWNLOADS="$2"; shift 2 ;;
         --crt)  CRT=true; shift ;;
         --ephemeral) EPHEMERAL=true; shift ;;
-        --no-cookies) NO_COOKIES=true; shift ;;
         --no-sponsorblock) NO_SPONSORBLOCK=true; shift ;;
         -h|--help) usage ;;
         -*)     echo "Unknown option: $1" >&2; exit 1 ;;
@@ -185,8 +188,8 @@ if ! $NO_SPONSORBLOCK; then
     args+=("--sponsorblock-remove" "${SPONSORBLOCK_CATEGORIES:-all}")
 fi
 
-# Cookies
-if ! $NO_COOKIES; then
+# Cookies (opt-in via -c)
+if [[ -n "$COOKIE_BROWSER" ]]; then
     args+=("--cookies-from-browser" "$COOKIE_BROWSER")
 fi
 

@@ -6,7 +6,6 @@ param(
     [string]$Browser = "",
     [int]$MaxDownloads = 0,
     [switch]$CRT,
-    [switch]$NoCookies,
     [switch]$NoSponsorBlock
 )
 
@@ -107,8 +106,8 @@ $ytDlpArgs = @(
     "--js-runtimes", ("deno:" + $ToolsDir + "\bin")
 )
 
-# Cookies
-if (-not $NoCookies) {
+# Cookies (opt-in via -Browser)
+if ($Browser) {
     $ytDlpArgs += @("--cookies-from-browser", $Browser)
 }
 
