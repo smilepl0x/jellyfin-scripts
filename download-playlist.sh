@@ -108,7 +108,7 @@ done
 download() {
     local url="$1" dest="$2"
     echo "  Downloading $(basename "$dest")..."
-    curl -L --progress-bar --connect-timeout 10 --max-time 300 -o "$dest" "$url"
+    curl -L --progress-bar --connect-timeout 15 --max-time 300 -o "$dest" "$url"
 }
 
 # --- Ensure yt-dlp ---
