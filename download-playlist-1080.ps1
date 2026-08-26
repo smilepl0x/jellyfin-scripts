@@ -137,9 +137,10 @@ if ($AudioOnly) {
 } else {
     # Download bestvideo+bestaudio and let yt-dlp merge using ffmpeg
     $ytDlpArgs += @("-f", "bv[height<=$MaxHeight]+bestaudio/best[height<=$MaxHeight]")
-    $ppArgs = "ffmpeg:-af loudnorm=I=${LoudnormI_Video}:TP=${LoudnormTP_Video}:LRA=${LoudnormLRA} -c:v copy -c:a libopus"
     if ($CRT) {
-        $ppArgs += " -vf scale=-2:ih,crop=ih*4/3:ih"
+        $ppArgs = "ffmpeg:-vf scale=-2:ih,crop=ih*4/3:ih -c:v libx264 -af loudnorm=I=${LoudnormI_Video}:TP=${LoudnormTP_Video}:LRA=${LoudnormLRA} -c:a libopus"
+    } else {
+        $ppArgs = "ffmpeg:-c:v copy -af loudnorm=I=${LoudnormI_Video}:TP=${LoudnormTP_Video}:LRA=${LoudnormLRA} -c:a libopus"
     }
     $ytDlpArgs += @("--postprocessor-args", $ppArgs)
 }
