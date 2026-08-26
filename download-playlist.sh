@@ -22,6 +22,7 @@ OUTPUT_DIR="${OUTPUT_DIR:-$HOME/Downloads/yt-dlp_playlist}"
 AUDIO_ONLY=false
 AUDIO_FORMAT="${DEFAULT_AUDIO_FORMAT:-mp3}"
 COOKIE_BROWSER=""
+COOKIE_FILE=""
 NO_SPONSORBLOCK=false
 MAX_DOWNLOADS=""
 CRT=false
@@ -41,6 +42,7 @@ Options:
   -a              Audio-only mode
   -f FORMAT       Audio format (default: mp3)
   -c [BROWSER]    Extract cookies from browser (opt-in, defaults to config value)
+  --cookies-file PATH  Use cookies from file (Netscape format, e.g. cookies.txt)
   -n NUM          Max downloads (for testing)
   --crt           Crop video to 4:3 for CRT displays
   --ephemeral     Store tools in /tmp (cleaned on reboot)
@@ -63,6 +65,7 @@ while [[ $# -gt 0 ]]; do
                 COOKIE_BROWSER="$2"; shift 2
             fi ;;
         -n)     MAX_DOWNLOADS="$2"; shift 2 ;;
+        --cookies-file) COOKIE_FILE="$2"; shift 2 ;;
         --crt)  CRT=true; shift ;;
         --ephemeral) EPHEMERAL=true; shift ;;
         --no-sponsorblock) NO_SPONSORBLOCK=true; shift ;;
@@ -215,8 +218,10 @@ if ! $NO_SPONSORBLOCK; then
     args+=("--sponsorblock-remove" "${SPONSORBLOCK_CATEGORIES:-all}")
 fi
 
-# Cookies (opt-in via -c)
-if [[ -n "$COOKIE_BROWSER" ]]; then
+# Cookies
+if [[ -n "$COOKIE_FILE" ]]; then
+    args+=("--cookies" "$COOKIE_FILE")
+elif [[ -n "$COOKIE_BROWSER" ]]; then
     args+=("--cookies-from-browser" "$COOKIE_BROWSER")
 fi
 
