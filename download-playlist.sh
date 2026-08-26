@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -34,6 +34,7 @@ usage() {
 Usage: $(basename "$0") [OPTIONS] PLAYLIST_URL
 
 Download a playlist using yt-dlp with auto-downloaded tools.
+Note: Quote the URL if it contains & characters (e.g. "URL&list=...").
 
 Options:
   -o DIR          Output directory (default: ~/Downloads/yt-dlp_playlist)
