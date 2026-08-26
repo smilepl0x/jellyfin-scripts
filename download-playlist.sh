@@ -237,7 +237,7 @@ if $AUDIO_ONLY; then
 else
     args+=("-f" "bv[height<=${MAX_HEIGHT:-1080}]+bestaudio/best[height<=${MAX_HEIGHT:-1080}]")
     if $CRT; then
-        pp_args="-vf scale=-2:ih,crop=ih*4/3:ih -af loudnorm=I=${LOUDNORM_I_VIDEO:--14}:TP=${LOUDNORM_TP_VIDEO:--1.0}:LRA=${LOUDNORM_LRA:-11} -c:a libopus"
+        pp_args="-vf scale=-2:ih,crop=ih*4/3:ih -c:v libx264 -af loudnorm=I=${LOUDNORM_I_VIDEO:--14}:TP=${LOUDNORM_TP_VIDEO:--1.0}:LRA=${LOUDNORM_LRA:-11} -c:a libopus"
     else
         pp_args="-c:v copy -af loudnorm=I=${LOUDNORM_I_VIDEO:--14}:TP=${LOUDNORM_TP_VIDEO:--1.0}:LRA=${LOUDNORM_LRA:-11} -c:a libopus"
     fi
