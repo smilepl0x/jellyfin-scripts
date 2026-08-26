@@ -139,7 +139,7 @@ if ($AudioOnly) {
     $ytDlpArgs += @("-f", "bv[height<=$MaxHeight]+bestaudio/best[height<=$MaxHeight]")
     if ($CRT) {
         $ytDlpArgs += @("--merge-output-format", "mkv")
-        $ppArgs = "ffmpeg:-vf scale=-2:ih,crop=ih*4/3:ih -c:v libx264 -af loudnorm=I=${LoudnormI_Video}:TP=${LoudnormTP_Video}:LRA=${LoudnormLRA} -c:a libopus"
+        $ppArgs = "ffmpeg:-vf scale=-2:ih,crop=min(iw\,ih*4/3):ih -c:v libx264 -af loudnorm=I=${LoudnormI_Video}:TP=${LoudnormTP_Video}:LRA=${LoudnormLRA} -c:a libopus"
     } else {
         $ppArgs = "ffmpeg:-c:v copy -af loudnorm=I=${LoudnormI_Video}:TP=${LoudnormTP_Video}:LRA=${LoudnormLRA} -c:a libopus"
     }
