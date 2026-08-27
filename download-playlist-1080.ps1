@@ -42,6 +42,13 @@ $LoudnormTP_Audio = if ($Config["LOUDNORM_TP_AUDIO"]) { $Config["LOUDNORM_TP_AUD
 $LoudnormI_Video = if ($Config["LOUDNORM_I_VIDEO"]) { $Config["LOUDNORM_I_VIDEO"] } else { "-14" }
 $LoudnormTP_Video = if ($Config["LOUDNORM_TP_VIDEO"]) { $Config["LOUDNORM_TP_VIDEO"] } else { "-1.0" }
 $LoudnormLRA = if ($Config["LOUDNORM_LRA"]) { $Config["LOUDNORM_LRA"] } else { "11" }
+$SleepRequests = if ($Config["SLEEP_REQUESTS"]) { $Config["SLEEP_REQUESTS"] } else { "" }
+$SleepInterval = if ($Config["SLEEP_INTERVAL"]) { $Config["SLEEP_INTERVAL"] } else { "" }
+$MaxSleepInterval = if ($Config["MAX_SLEEP_INTERVAL"]) { $Config["MAX_SLEEP_INTERVAL"] } else { "" }
+$Retries = if ($Config["RETRIES"]) { $Config["RETRIES"] } else { "" }
+$FragmentRetries = if ($Config["FRAGMENT_RETRIES"]) { $Config["FRAGMENT_RETRIES"] } else { "" }
+$RetrySleepFunc = if ($Config["RETRY_SLEEP_FUNC"]) { $Config["RETRY_SLEEP_FUNC"] } else { "" }
+$LimitRate = if ($Config["LIMIT_RATE"]) { $Config["LIMIT_RATE"] } else { "" }
 
 # Tools & paths
 $ToolsDir = Join-Path $OutputDir "tools"
@@ -120,6 +127,15 @@ if (-not $NoSponsorBlock) {
 if ($MaxDownloads -gt 0) {
     $ytDlpArgs += @("--max-downloads", $MaxDownloads.ToString())
 }
+
+# Rate limiting / politeness
+if ($SleepRequests) { $ytDlpArgs += @("--sleep-requests", $SleepRequests) }
+if ($SleepInterval) { $ytDlpArgs += @("--sleep-interval", $SleepInterval) }
+if ($MaxSleepInterval) { $ytDlpArgs += @("--max-sleep-interval", $MaxSleepInterval) }
+if ($Retries) { $ytDlpArgs += @("--retries", $Retries) }
+if ($FragmentRetries) { $ytDlpArgs += @("--fragment-retries", $FragmentRetries) }
+if ($RetrySleepFunc) { $ytDlpArgs += @("--retry-sleep-func", $RetrySleepFunc) }
+if ($LimitRate) { $ytDlpArgs += @("--limit-rate", $LimitRate) }
 
 # Add ffmpeg location to yt-dlp args
 foreach ($folder in (Get-ChildItem -Path $FfmpegDir -Filter $FfmpegUnzippedDirPattern -Directory -ErrorAction SilentlyContinue)) {

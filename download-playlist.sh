@@ -230,6 +230,29 @@ if [[ -n "$MAX_DOWNLOADS" ]]; then
     args+=("--max-downloads" "$MAX_DOWNLOADS")
 fi
 
+# Rate limiting / politeness
+if [[ -n "${SLEEP_REQUESTS:-}" ]]; then
+    args+=("--sleep-requests" "$SLEEP_REQUESTS")
+fi
+if [[ -n "${SLEEP_INTERVAL:-}" ]]; then
+    args+=("--sleep-interval" "$SLEEP_INTERVAL")
+fi
+if [[ -n "${MAX_SLEEP_INTERVAL:-}" ]]; then
+    args+=("--max-sleep-interval" "$MAX_SLEEP_INTERVAL")
+fi
+if [[ -n "${RETRIES:-}" ]]; then
+    args+=("--retries" "$RETRIES")
+fi
+if [[ -n "${FRAGMENT_RETRIES:-}" ]]; then
+    args+=("--fragment-retries" "$FRAGMENT_RETRIES")
+fi
+if [[ -n "${RETRY_SLEEP_FUNC:-}" ]]; then
+    args+=("--retry-sleep-func" "$RETRY_SLEEP_FUNC")
+fi
+if [[ -n "${LIMIT_RATE:-}" ]]; then
+    args+=("--limit-rate" "$LIMIT_RATE")
+fi
+
 # ffmpeg location
 if [[ -n "$FFMPEG_DIR" && -d "$FFMPEG_DIR" ]]; then
     args+=("--ffmpeg-location" "$FFMPEG_DIR")
