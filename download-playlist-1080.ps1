@@ -47,7 +47,7 @@ $SleepInterval = if ($Config["SLEEP_INTERVAL"]) { $Config["SLEEP_INTERVAL"] } el
 $MaxSleepInterval = if ($Config["MAX_SLEEP_INTERVAL"]) { $Config["MAX_SLEEP_INTERVAL"] } else { "" }
 $Retries = if ($Config["RETRIES"]) { $Config["RETRIES"] } else { "" }
 $FragmentRetries = if ($Config["FRAGMENT_RETRIES"]) { $Config["FRAGMENT_RETRIES"] } else { "" }
-$RetrySleepFunc = if ($Config["RETRY_SLEEP_FUNC"]) { $Config["RETRY_SLEEP_FUNC"] } else { "" }
+$RetrySleep = if ($Config["RETRY_SLEEP"]) { $Config["RETRY_SLEEP"] } else { "" }
 $LimitRate = if ($Config["LIMIT_RATE"]) { $Config["LIMIT_RATE"] } else { "" }
 
 # Tools & paths
@@ -134,7 +134,7 @@ if ($SleepInterval) { $ytDlpArgs += @("--sleep-interval", $SleepInterval) }
 if ($MaxSleepInterval) { $ytDlpArgs += @("--max-sleep-interval", $MaxSleepInterval) }
 if ($Retries) { $ytDlpArgs += @("--retries", $Retries) }
 if ($FragmentRetries) { $ytDlpArgs += @("--fragment-retries", $FragmentRetries) }
-if ($RetrySleepFunc) { $ytDlpArgs += @("--retry-sleep-func", $RetrySleepFunc) }
+if ($RetrySleep) { $ytDlpArgs += @("--retry-sleep", $RetrySleep) }
 if ($LimitRate) { $ytDlpArgs += @("--limit-rate", $LimitRate) }
 
 # Add ffmpeg location to yt-dlp args

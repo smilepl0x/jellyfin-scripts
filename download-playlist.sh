@@ -246,8 +246,8 @@ fi
 if [[ -n "${FRAGMENT_RETRIES:-}" ]]; then
     args+=("--fragment-retries" "$FRAGMENT_RETRIES")
 fi
-if [[ -n "${RETRY_SLEEP_FUNC:-}" ]]; then
-    args+=("--retry-sleep-func" "$RETRY_SLEEP_FUNC")
+if [[ -n "${RETRY_SLEEP:-}" ]]; then
+    args+=("--retry-sleep" "$RETRY_SLEEP")
 fi
 if [[ -n "${LIMIT_RATE:-}" ]]; then
     args+=("--limit-rate" "$LIMIT_RATE")
