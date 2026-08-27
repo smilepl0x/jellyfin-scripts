@@ -56,7 +56,8 @@ $YtdlpPath = Join-Path $ToolsDir "yt-dlp.exe"
 $FfmpegDir = Join-Path $ToolsDir "bin\ffmpeg"
 $FfmpegUnzippedDirPattern = "ffmpeg-?.?.?-essentials_build"
 $DenoPath = Join-Path $ToolsDir "bin\deno.exe"
-$ArchiveFile = Join-Path $ToolsDir $ArchiveFilename
+# Archive lives with the output so it survives tool cleanup.
+$ArchiveFile = Join-Path $OutputDir $ArchiveFilename
 
 # Ensure directories
 New-Item -Path $OutputDir -ItemType Directory -Force | Out-Null

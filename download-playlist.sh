@@ -96,7 +96,9 @@ else
 fi
 
 BIN_DIR="$TOOLS_DIR/bin"
-ARCHIVE_FILE="$TOOLS_DIR/$ARCHIVE_FILENAME"
+# Archive lives with the output so it survives ephemeral tool cleanup.
+mkdir -p "$OUTPUT_DIR"
+ARCHIVE_FILE="$OUTPUT_DIR/$ARCHIVE_FILENAME"
 mkdir -p "$BIN_DIR"
 
 # --- Check for required system tools ---
